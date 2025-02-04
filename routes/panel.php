@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['check_mobile_app', 'impersonate', 'panel', 'share', 'check_maintenance']], function () {
     Route::get('/', 'WebinarController@purchases');
     // Route::get('/', 'DashboardController@dashboard');
-    
+
     Route::group(['prefix' => 'report'], function () {
         Route::get('/', 'UserReportController@getByDivision');
         Route::get('/pdf', 'UserReportController@getPdfByDivision');
@@ -19,6 +19,11 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
         Route::get('/division', 'UserReportController@division');
         Route::get('/user/{id}', 'UserReportController@edit');
         Route::get('/user/periode/{id}', 'UserReportController@byPeriod');
+    });
+
+    Route::group(['prefix' => 'stages'], function () {
+        Route::get('/teacher', 'LevelController@teacher');
+        Route::get('/webinar', 'LevelController@webinar');
     });
 
     Route::group(['prefix' => 'users'], function () {
@@ -123,8 +128,6 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
 
         Route::get('/{quizResultId}/edit-result', 'QuizController@editResult');
         Route::post('/{quizResultId}/update-result', 'QuizController@updateResult');
-
-
     });
 
     Route::group(['prefix' => 'quizzes-questions'], function () {
@@ -469,5 +472,3 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
         });
     });
 });
-
-

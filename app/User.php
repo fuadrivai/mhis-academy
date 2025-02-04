@@ -49,7 +49,7 @@ class User extends Authenticatable
         'facebook_id',
         'role_id'
     ];
-    protected $with = ['location', 'category'];
+    protected $with = ['location', 'category', 'level'];
 
     static $statuses = [
         'active',
@@ -133,6 +133,10 @@ class User extends Authenticatable
     public function location()
     {
         return $this->belongsTo('App\Location', 'location_id', 'id');
+    }
+    public function level()
+    {
+        return $this->belongsTo('App\Level', 'level_id', 'id');
     }
 
     public function getAvatar($size = 40)

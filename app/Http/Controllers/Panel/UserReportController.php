@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Location;
 use App\Models\Category;
 use App\Models\Sale;
-use App\Models\Webinar;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
