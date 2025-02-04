@@ -9,7 +9,6 @@
 @section('content')
     <section>
         <h2 class="section-title">Teacher List</h2>
-        {{-- <h2 class="section-title">{{ $students[5]->category_id}}</h2> --}}
     </section>
 
     <section class="mt-25">
@@ -31,14 +30,14 @@
                             <tbody>
                                @foreach ($students as $item)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td class="text-left">{{ $item->full_name }}
-                                        <br><small>{{ $item->email }}</small>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td class="text-left">{{ $item['full_name'] }}
+                                        <br><small>{{ $item['email'] }}</small>
                                     </td>
-                                    <td>{{ $item->category->slug??"--" }}</td>
-                                    <td>{{ $item->location->name??"--" }}</td>
-                                    <td>{{ $item->level->stage??"--" }}</td>
-                                    <td>{{ $item->iteration }}</td>
+                                    <td>{{$item['category']['slug']??"--"}}</td>
+                                    <td>{{$item['location']['name']??"--"}}</td>
+                                    <td>{{$item['level']['stage']??"--"}}</td>
+                                    <td>--</td>
                                 </tr>
                                @endforeach
                             </tbody>

@@ -65,7 +65,7 @@ class Category extends Model implements TranslatableContract
 
     public function users()
     {
-        return $this->hasMany(User::class, 'category_id', 'id');
+        return $this->hasMany(User::class);
     }
 
     public function webinars()

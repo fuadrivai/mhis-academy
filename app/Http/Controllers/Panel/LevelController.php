@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Level;
+use App\Models\Category;
 use App\Models\Webinar;
 use App\User;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class LevelController extends Controller
         $students = User::where('id', '!=', $user->id)
             ->where('category_id', $user->category_id)
             ->where('location_id', $user->location_id)->get();
-        return view(getTemplate() . '.panel.stages.teacher', ['students' => $students]);
+        return view(getTemplate() . '.panel.stages.teacher', ['students' => json_decode($students, true)]);
     }
 
     public function webinar()
