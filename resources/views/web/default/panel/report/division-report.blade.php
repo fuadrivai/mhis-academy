@@ -115,6 +115,7 @@
     <script src="/assets/default/vendors/bootstrap-datepicker/bootstrap-datepicker.js"></script>
     <script src="/assets/default/vendors/select2/select2.min.js"></script>
     <script src="/assets/default/vendors/toast/jquery.toast.min.js"></script>
+    <script src="/assets/default/vendors/jquery-blockUI/jquery.blockUI.js"></script>
     <script src="/assets/default/js/panel/report.js"></script>
 
     <script>
@@ -190,12 +191,12 @@
                 $('#to').val('')
                 if ($('#from').val()!="") {
                     var startDate = $(this).datepicker('getDate');
-                    $('#to').attr('disabled',false)
-                    $('#to').attr('required',true)
+                    $('#to').attr('disabled',false);
+                    $('#to').attr('required',true);
                     $('#to').datepicker('setStartDate', moment(startDate).toDate());
                 }else{
-                    $('#to').attr('disabled',true)
-                    $('#to').attr('required',false)
+                    $('#to').attr('disabled',true);
+                    $('#to').attr('required',false);
                 }
             })
 
@@ -270,6 +271,15 @@
                 })
                 return false;
             }
+            $.blockUI({ css: { 
+                border: 'none', 
+                padding: '15px', 
+                backgroundColor: '#000', 
+                '-webkit-border-radius': '10px', 
+                '-moz-border-radius': '10px', 
+                opacity: .5, 
+                color: '#fff' 
+            } }); 
             let data = {
                 from : from,
                 to : to,
@@ -280,7 +290,9 @@
             ajax(data, `${baseUrl}/panel/report`, "GET",
                 function(json) {
                     reloadJsonDataTable(table, json);
+                    $.unblockUI()
             },function(json){
+                $.unblockUI()
                 console.log(json);
             })
         }
