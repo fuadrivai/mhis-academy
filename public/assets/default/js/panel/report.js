@@ -22,3 +22,30 @@ function reloadJsonDataTable(dtable, json) {
     dtable.clear().draw();
     dtable.rows.add(json).draw();
 }
+
+function blockUI() {
+    $.blockUI({
+        css: {
+            border: 'none',
+            padding: '15px',
+            backgroundColor: '#000',
+            '-webkit-border-radius': '10px',
+            '-moz-border-radius': '10px',
+            opacity: .5,
+            color: '#fff'
+        }
+    });
+}
+function unblockUI() {
+    $.unblockUI()
+}
+
+function toast(message, background) {
+    $.toast({
+        heading: 'Information',
+        text: message,
+        icon: 'warning',
+        loader: true,        // Change it to false to disable loader
+        loaderBg: background  // To change the background
+    })
+}

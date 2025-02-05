@@ -262,24 +262,10 @@
             let from = $('#from').val();
             let to = $('#to').val();
             if (from == "" || to == "") {
-                $.toast({
-                    heading: 'Information',
-                    text: 'Start date and End date could not be empty',
-                    icon: 'warning',
-                    loader: true,        // Change it to false to disable loader
-                    loaderBg: 'text-danger'  // To change the background
-                })
+                toast('Start date and End date could not be empty','text-danger')
                 return false;
             }
-            $.blockUI({ css: { 
-                border: 'none', 
-                padding: '15px', 
-                backgroundColor: '#000', 
-                '-webkit-border-radius': '10px', 
-                '-moz-border-radius': '10px', 
-                opacity: .5, 
-                color: '#fff' 
-            } }); 
+            blockUI()
             let data = {
                 from : from,
                 to : to,
@@ -290,24 +276,20 @@
             ajax(data, `${baseUrl}/panel/report`, "GET",
                 function(json) {
                     reloadJsonDataTable(table, json);
-                    $.unblockUI()
-            },function(json){
-                $.unblockUI()
-                console.log(json);
-            })
+                    unblockUI()
+                },
+                function(json){
+                    unblockUI()
+                    console.log(json);
+                }
+            )
         }
 
         function getReportPdf(){
             let from = $('#from').val();
             let to = $('#to').val();
             if (from == "" || to == "") {
-                $.toast({
-                    heading: 'Information',
-                    text: 'Start date and End date could not be empty',
-                    icon: 'warning',
-                    loader: true,        // Change it to false to disable loader
-                    loaderBg: 'text-danger'  // To change the background
-                })
+                toast('Start date and End date could not be empty','text-danger')
                 return false;
             }
             let data = {

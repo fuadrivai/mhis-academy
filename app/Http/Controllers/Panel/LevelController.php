@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Level;
-use App\Models\Category;
 use App\Models\Webinar;
 use App\User;
 use Illuminate\Http\Request;
@@ -35,7 +34,14 @@ class LevelController extends Controller
         $students = User::where('id', '!=', $user->id)
             ->where('category_id', $user->category_id)
             ->where('location_id', $user->location_id)->get();
-        return view(getTemplate() . '.panel.stages.teacher', ['students' => json_decode($students, true)]);
+        $levels = Level::all();
+        return view(
+            getTemplate() . '.panel.stages.teacher',
+            [
+                'students' => json_decode($students, true),
+                'levels' => $levels
+            ]
+        );
     }
 
     public function webinar()
@@ -65,7 +71,7 @@ class LevelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // 
     }
 
     /**
@@ -97,9 +103,16 @@ class LevelController extends Controller
      * @param  \App\Level  $level
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Level $level)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            User::where('id', $id)->update([
+                'level_id' => $request->input('level')
+            ]);
+            return back()->with('success', 'Data saved successfully');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage(), $th->getCode());
+        }
     }
 
     /**

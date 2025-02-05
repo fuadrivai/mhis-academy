@@ -23,12 +23,13 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
 
     Route::group(['prefix' => 'stages'], function () {
         Route::get('/teacher', 'LevelController@teacher');
+        Route::post('/teacher/post/{id}', 'LevelController@update');
         Route::get('/webinar', 'LevelController@webinar');
     });
 
     Route::group(['prefix' => 'users'], function () {
         Route::post('/search', 'UserController@search');
-        Route::post('/contact-info', 'UserController@contactInfo');
+        // Route::post('/contact-info', 'UserController@contactInfo');
         Route::post('/offlineToggle', 'UserController@offlineToggle');
         Route::get('/{id}/getInfo', 'UserController@getUserInfo');
     });
