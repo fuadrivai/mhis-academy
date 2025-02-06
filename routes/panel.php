@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Panel\LevelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -8,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+Route::get('panel/stages/webinar/datatable', [LevelController::class, 'webinar_datatables']);
 Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['check_mobile_app', 'impersonate', 'panel', 'share', 'check_maintenance']], function () {
     Route::get('/', 'WebinarController@purchases');
     // Route::get('/', 'DashboardController@dashboard');
@@ -25,6 +27,9 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
         Route::get('/teacher', 'LevelController@teacher');
         Route::post('/teacher/post/{id}', 'LevelController@update');
         Route::get('/webinar', 'LevelController@webinar');
+        Route::get('/webinar/create', 'LevelController@webinar_create');
+        Route::get('/webinar/{id}', 'LevelController@webinar_edit');
+        // Route::get('/webinar/datatable', 'LevelController@webinar_datatables');
     });
 
     Route::group(['prefix' => 'users'], function () {

@@ -53,6 +53,7 @@ class UserReportController extends Controller
         $students = $this->generateUserCourse($request);
         return response()->json($students);
     }
+
     public function getPdfByDivision(Request $request)
     {
         $students = $this->generateUserCourse($request);
