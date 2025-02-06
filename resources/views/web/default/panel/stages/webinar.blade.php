@@ -37,10 +37,10 @@
                             <tbody>
                                 @foreach ($targets as $target)
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{$target->stage_name}}</td>
-                                    <td>{{$target->category_name}}</td>
-                                    <td>{{$target->location_name}}</td>
-                                    <td>{{count($target->details)}}</td>
+                                    <td>{{$target['stage_name']}}</td>
+                                    <td>{{$target['category_name']}}</td>
+                                    <td>{{$target['location_name']}}</td>
+                                    <td>{{count($target['details'])}}</td>
                                     <td>
                                         <a href="" class="btn btn-sm btn-warning">
                                             <i class="fa fa-edit"></i> Edit

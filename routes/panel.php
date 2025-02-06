@@ -26,6 +26,7 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
     Route::group(['prefix' => 'stages'], function () {
         Route::get('/teacher', 'LevelController@teacher');
         Route::post('/teacher/post/{id}', 'LevelController@update');
+        Route::post('/webinar/save', 'LevelController@store_target');
         Route::get('/webinar', 'LevelController@webinar');
         Route::get('/webinar/create', 'LevelController@webinar_create');
         Route::get('/webinar/{id}', 'LevelController@webinar_edit');

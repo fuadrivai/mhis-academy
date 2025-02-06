@@ -29,6 +29,6 @@ class StageDivision extends Model
     }
     public function details()
     {
-        return $this->hasMany(StageDivisionDetail::class);
+        return $this->hasMany(StageDivisionDetail::class, 'stage_divisions_id', 'id');
     }
 }

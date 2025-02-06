@@ -19,10 +19,14 @@
                     <div class="col-12 col-lg-4">
                         <div class="form-group">
                             <label class="input-label">Branch</label>
-                            <select name="branch" id="branch" class="form-control select2" style="width: 100%">
-                                <option value="all">All</option>
+                            <select {{isset($user->location_id)?"disabled":""}} required name="branch" id="branch" class="form-control select2" style="width: 100%">
+                                <option value="">-- Select Branch --</option>
                                 @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    @if ($user->location_id==$branch->id)
+                                        <option selected value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    @else
+                                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -30,9 +34,14 @@
                     <div class="col-12 col-lg-4">
                         <div class="form-group">
                             <label class="input-label">Division</label>
-                            <select name="division" id="division" class="form-control select2" style="width: 100%">
+                            <select {{isset($user->category_id)?"disabled":""}} required name="division" id="division" class="form-control select2" style="width: 100%">
+                                <option value="">-- Select Division --</option>
                                 @foreach($divisions as $division)
-                                    <option value="{{ $division->id }}">{{ $division->slug }}</option>
+                                    @if ($user->category_id==$division->id)
+                                        <option selected value="{{ $division->id }}">{{ $division->slug }}</option>
+                                    @else
+                                        <option value="{{ $division->id }}">{{ $division->slug }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             
@@ -41,7 +50,7 @@
                     <div class="col-12 col-lg-4">
                         <div class="form-group">
                             <label class="input-label">Stages</label>
-                            <select name="division" id="division" class="form-control select2" style="width: 100%">
+                            <select name="level" id="level" class="form-control select2" style="width: 100%">
                                 @foreach($levels as $level)
                                     <option value="{{ $level->id }}">{{ $level->stage }}</option>
                                 @endforeach
@@ -59,7 +68,7 @@
             <h3 class="section-title text-center">Course List</h3>
             <div class="row">
                 <div class="col-md-3 col-sm-12">
-                    <a href="#" data-toggle="modal" data-target="#modal-webinar" class="btn btn-sm btn-block btn-secondary"><i class="fa fa-plus"> Add Courses</i></a>
+                    <a href="#" data-toggle="modal" data-target="#modal-webinar" class="btn btn-secondary"><i class="fa fa-plus"> Add Courses</i></a>
                 </div>
             </div>
             <div class="row pt-20">
@@ -68,19 +77,21 @@
                         <table class="table table-sm table-striped table-bordered text-center" id="target-tabel">
                             <thead>
                                 <tr>
-                                    <th class="text-left text-gray"></th>
-                                    <th class="text-left text-gray">No</th>
-                                    <th class="text-left text-gray">Name</th>
-                                    <th class="text-left text-gray">Division</th>
-                                    <th class="text-left text-gray">Branch</th>
-                                    <th class="text-left text-gray">Total Courses</th>
+                                    <th class="text-left text-gray">Course</th>
+                                    <th class="text-left text-gray">Category</th>
+                                    <th class="text-left text-gray">Duration</th>
+                                    <th class="text-left text-gray">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button onclick="onSaveTarget()" class="btn btn-primary"><i class="fa fa-save"> Save</i></button>
                 </div>
             </div>
         </div>
@@ -113,7 +124,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 text-center">
-                            <button type="button" class="btn btn-secondary"><i class="fa fa-save"> Submit</i></button>
+                            <button onclick="onInputWebinar()" type="button" class="btn btn-secondary"><i class="fa fa-save"> Submit</i></button>
                         </div>
                     </div>
                 </div>
@@ -141,24 +152,42 @@
             details:[]
         }
         let webinars = [];
+        let tempWebinars = [];
         $(document).ready(function(){
-            getData();
-            // table = $('#target-tabel').DataTable({
-            //     searching: false,
-            //     paging: false,
-            //     data:targets.details,
-            //     columns:[
-            //         {
-            //             data:"webinar.",
-            //             bSortable: false,
-            //             className:"text-left",
-            //         },
-            //         {
-            //             data:"",
-            //             className:"",
-            //         }
-            //     ]
-            // });
+            getWebinar();
+            tblTarget = $('#target-tabel').DataTable({
+                searching: false,
+                paging: false,
+                data:targets.details,
+                columns:[
+                    {
+                        data:"webinar.title",
+                        bSortable: false,
+                        className:"text-left",
+                    },
+                    {
+                        data:"webinar.category.slug",
+                        bSortable: false,
+                        className:"text-center",
+                    },
+                    {
+                        data:"webinar.duration",
+                        bSortable: false,
+                        className:"text-center",
+                        mRender:function(data,type,full){
+                            return `${data} - Minutes`
+                        }
+                    },
+                    {
+                        data:"webinar.id",
+                        bSortable: false,
+                        className:"text-center",
+                        mRender:function(data,type,full){
+                            return `<button class="btn btn-sm btn-danger delete-webinar"><i class="fa fa-trash"></i></button>`
+                        }
+                    },
+                ]
+            });
 
             tblWebinar = $('#webinar-target').DataTable({
                 data:webinars,
@@ -168,7 +197,7 @@
                         defaultContent:"--",
                         className:'text-center',
                         mRender:function(data,type,full){
-                            return `<input type="checkbox" class="input-check" data-id="${data}">`
+                            return `<input type="checkbox" class="input-check" id="check-${data}" data-id="${data}">`
                         }
                     },
                     {
@@ -193,7 +222,7 @@
                         className:'text-center',
                         defaultContent:"--",
                         mRender:function(data,type,full){
-                            return `${data}`
+                            return `<span class="badge text-white" style='background-color:green'>${data}</span>`
                         }
                     }
                 ],
@@ -209,9 +238,45 @@
                     }
                 },
             })
+
+            $('#modal-webinar').on('show.bs.modal', function (e) {
+                targets.details.forEach(e=>{
+                    tempWebinars.push(e.webinar);
+                })
+                reloadJsonDataTable(tblWebinar, webinars);
+            })
+
+            $('#webinar-target').on('change','td input[type="checkbox"]',function() {
+                let webinar = tblWebinar.row($(this).parents('tr')).data();
+                let val = $(this).prop('checked');
+                if (val) {
+                    tempWebinars.push(webinar);
+                }else{
+                    tempWebinars.splice(webinar,1);
+                }
+            })
+
+            $('#target-tabel').on('click','.delete-webinar',function(){
+                let data = tblTarget.row($(this).parents('tr')).index();
+                targets.details.splice(data, 1);
+                reloadJsonDataTable(tblTarget, targets.details);
+            })
         })
 
-        function getData(){
+        function onInputWebinar() {
+            targets.details=[];
+            tempWebinars.forEach(e => {
+                detail = {
+                    webinar:e
+                }
+                targets.details.push(detail);
+            });
+            tempWebinars = [];
+            $('#modal-webinar').modal('hide')
+            reloadJsonDataTable(tblTarget, targets.details);
+        }
+
+        function getWebinar(){
             blockUI();
             ajax(null, `${baseUrl}/panel/stages/webinar/datatable`, "GET",
                 function(json) {
@@ -221,6 +286,31 @@
                 },
                 function(json){
                     unblockUI()
+                    console.log(json);
+                }
+            )
+        }
+        function onSaveTarget(){
+            if ($('#branch').val()=="" || $('#division').val()=="") {
+                toast('Branch or Division cannot be Empty !','error')
+                return false;
+            }
+            if (targets.details.length <1) {
+                toast('Course detail cannot be empty !','error')
+                return false;
+            }
+            blockUI();
+            targets.level_id=$('#level').val();
+            targets.category_id=$('#division').val();
+            targets.location_id=$('#branch').val();
+            ajax(targets, `${baseUrl}/panel/stages/webinar/save`, "POST",
+                function(json) {
+                    unblockUI()
+                    toast('Data Saved Successfully','success')
+                },
+                function(json){
+                    unblockUI()
+                    toast(json.message??'something went wrong, Please try again later !','error')
                     console.log(json);
                 }
             )

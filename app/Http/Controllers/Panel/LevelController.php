@@ -8,6 +8,7 @@ use App\Location;
 use App\Models\Category;
 use App\Models\Webinar;
 use App\StageDivision;
+use App\StageDivisionDetail;
 use App\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -69,21 +70,23 @@ class LevelController extends Controller
             'branches' => $locations,
             'divisions' => $categories,
             'levels' => $levels,
+            'user' => $user
         ]);
     }
 
     public function webinar_edit($id)
     {
-        // $user = auth()->user();
-        // $this->handleAuthorize($user);
-        // $locations = Location::all();
-        // $levels = Level::all();
-        // $categories = Category::whereNull('parent_id')->where('slug', '!=', 'sub-general')->get();
-        // return view(getTemplate() . '.panel.stages.webinar-form', [
-        //     'location' => $locations,
-        //     'categories' => $categories,
-        //     'levels' => $levels,
-        // ]);
+        $user = auth()->user();
+        $this->handleAuthorize($user);
+        $locations = Location::all();
+        $levels = Level::all();
+        $categories = Category::whereNull('parent_id')->where('slug', '!=', 'sub-general')->get();
+        return view(getTemplate() . '.panel.stages.webinar-form', [
+            'branches' => $locations,
+            'divisions' => $categories,
+            'levels' => $levels,
+            'user' => $user
+        ]);
     }
     public function webinar_datatables(UtilitiesRequest $request)
     {
@@ -111,6 +114,33 @@ class LevelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function store_target(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            $sd = new StageDivision();
+            $sd->level_id = $request['level_id'];
+            $sd->category_id = $request['category_id'];
+            $sd->location_id = $request['location_id'];
+            $sd->created_by_id = $user->id;
+            $sd->stage_name = Level::find($request['level_id'])->stage;
+            $sd->category_name = Category::find($request['category_id'])->slug;
+            $sd->location_name = Location::find($request['location_id'])->name;
+            $sd->save();
+
+            for ($i = 0; $i < count($request->details); $i++) {
+                $detail = new StageDivisionDetail();
+                $detail->stage_divisions_id = $sd->id;
+                $detail->webinar_id = $request->details["webinar"]['id'];
+                $detail->save();
+            }
+            $newSd = StageDivision::find($sd->id);
+            return response()->json($newSd);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], $th->getCode());
+        }
+    }
+
     public function store(Request $request)
     {
         // 

@@ -262,7 +262,7 @@
             let from = $('#from').val();
             let to = $('#to').val();
             if (from == "" || to == "") {
-                toast('Start date and End date could not be empty','text-danger')
+                toast('Start date and End date could not be empty','error')
                 return false;
             }
             blockUI()
@@ -289,7 +289,7 @@
             let from = $('#from').val();
             let to = $('#to').val();
             if (from == "" || to == "") {
-                toast('Start date and End date could not be empty','text-danger')
+                toast('Start date and End date could not be empty','error')
                 return false;
             }
             let data = {

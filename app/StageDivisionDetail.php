@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StageDivisionDetail extends Model
 {
     protected $guarded = ['id'];
-    protected $hidden = ['stage_divisions_id', 'webinar_id'];
+    // protected $hidden = ['stage_divisions_id', 'webinar_id'];
     protected $with = ['webinar'];
 
     public function webinar()

@@ -40,12 +40,12 @@ function unblockUI() {
     $.unblockUI()
 }
 
-function toast(message, background) {
+function toast(message, icon = "warning") {
     $.toast({
         heading: 'Information',
         text: message,
-        icon: 'warning',
+        position: 'top-right',
+        icon: icon,
         loader: true,        // Change it to false to disable loader
-        loaderBg: background  // To change the background
     })
 }
