@@ -140,6 +140,7 @@
             location_id:null,
             details:[]
         }
+        let webinars = [];
         $(document).ready(function(){
             getData();
             // table = $('#target-tabel').DataTable({
@@ -160,6 +161,7 @@
             // });
 
             tblWebinar = $('#webinar-target').DataTable({
+                data:webinars,
                 columns:[
                     {
                         data:"id",
@@ -190,9 +192,11 @@
                         data:"status",
                         className:'text-center',
                         defaultContent:"--",
+                        mRender:function(data,type,full){
+                            return `${data}`
+                        }
                     }
                 ],
-                
                 drawCallback: function( settings ) {
                     var api = this.api();
                     var node = api.rows().nodes()
@@ -211,7 +215,8 @@
             blockUI();
             ajax(null, `${baseUrl}/panel/stages/webinar/datatable`, "GET",
                 function(json) {
-                    reloadJsonDataTable(tblWebinar, json);
+                    webinars = json;
+                    reloadJsonDataTable(tblWebinar, webinars);
                     unblockUI()
                 },
                 function(json){

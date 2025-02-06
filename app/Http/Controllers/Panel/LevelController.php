@@ -89,8 +89,8 @@ class LevelController extends Controller
     {
         $user = auth()->user();
         $categories_id = Category::whereNotNull('parent_id')->pluck('id')->toArray();
-        $webinars1 = Webinar::where('category_id', $user->category_id)->with(['category'])->get();
-        $webinars2 = Webinar::whereIn('category_id', $categories_id)->with(['category'])->get();
+        $webinars1 = Webinar::where('category_id', $user->category_id)->where('status', 'active')->with(['category'])->get();
+        $webinars2 = Webinar::whereIn('category_id', $categories_id)->where('status', 'active')->with(['category'])->get();
         $webinars = $webinars1->merge($webinars2);
         return response()->json($webinars);
     }
