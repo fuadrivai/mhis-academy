@@ -26,6 +26,7 @@ use App\User;
 use App\Models\Webinar;
 use App\Models\WebinarPartnerTeacher;
 use App\Models\WebinarFilterOption;
+use App\StageDivision;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -190,7 +191,7 @@ class WebinarController extends Controller
         ])->orderBy('updated_at', 'desc');
 
         $webinarsCount = $query->count();
-        
+
         if (request('q')) {
             $query->where('slug', 'LIKE', '%' . request('q') . '%');
         }
@@ -1059,9 +1060,40 @@ class WebinarController extends Controller
         abort(404);
     }
 
-    public function purchases(Request $request)
+    public function purchases()
     {
         $user = auth()->user();
+
+        if (request('tab')) {
+            if (request('tab') == "activity") {
+                $data = $this->my_activity($user, request('tab'));
+            } else {
+                $data = $this->target($user, request('tab'));
+            }
+        } else {
+            $data = $this->target($user, request('tab'));
+        }
+        return view(getTemplate() . '.panel.webinar.purchases', $data);
+    }
+
+    public function target($user, $tab)
+    {
+        $targets = StageDivision::where('category_id', $user->category_id)
+            ->where('location_id', $user->location_id)
+            ->where('level_id', $user->level_id)
+            ->first();
+        $data = [
+            'pageTitle' => trans('webinars.webinars_purchases_page_title'),
+            'target' => $targets,
+            'query' => [
+                'tab' => $tab
+            ]
+        ];
+        return $data;
+    }
+
+    public function my_activity($user, $tab)
+    {
 
         $giftsIds = Gift::query()->where('email', $user->email)
             ->where('status', 'active')
@@ -1203,10 +1235,13 @@ class WebinarController extends Controller
             'sales' => $sales,
             'purchasedCount' => $purchasedCount + $giftPurchasedCount,
             'hours' => $hours,
-            'upComing' => $upComing + $giftUpcoming
+            'upComing' => $upComing + $giftUpcoming,
+            'query' => [
+                'tab' => $tab
+            ]
         ];
 
-        return view(getTemplate() . '.panel.webinar.purchases', $data);
+        return $data;
     }
 
     public function getJoinInfo(Request $request)
