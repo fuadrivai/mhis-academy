@@ -50,13 +50,13 @@
                                     <td class="text-left">{{ $item['full_name'] }}
                                         <br><small>{{ $item['email'] }}</small>
                                     </td>
-                                    <td>{{$item['category']['slug']??"--"}}</td>
+                                    <td>{{$item['category']['title']??"--"}}</td>
                                     <td>{{$item['location']['name']??"--"}}</td>
                                     <td>
                                         @if (($item['level']['level']??-1)==0)
                                             <span class="badge badge-secondary"><strong>{{$item['level']['stage']}}</strong></span>
                                         @elseif(($item['level']['level']??-1)==1)
-                                            <span class="badge" style="background-color: #ffc107!important; color:white"><strong>{{$item['level']['stage']}}</strong></span>
+                                            <span class="badge" style="background-color: #097dd0!important; color:white"><strong>{{$item['level']['stage']}}</strong></span>
                                         @elseif(($item['level']['level']??-1)==2)
                                             <span class="badge" style="background-color: #28a745!important; color:white"><strong>{{$item['level']['stage']}}</strong></span>
                                         @elseif(($item['level']['level']??-1)==3)
@@ -138,7 +138,7 @@
         $(document).ready(function(){
             $('#teacher-tabel').DataTable({
                 paging: false,
-                searching: false,
+                searching: true,
             });
 
             $('#modal-edit').on('show.bs.modal', function (event) {

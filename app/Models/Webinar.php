@@ -31,12 +31,16 @@ class Webinar extends Model implements TranslatableContract
     static $textLesson = 'text_lesson';
 
     static $statuses = [
-        'active', 'pending', 'is_draft', 'inactive'
+        'active',
+        'pending',
+        'is_draft',
+        'inactive'
     ];
 
     static $videoDemoSource = ['upload', 'youtube', 'vimeo', 'external_link'];
 
     public $translatedAttributes = ['title', 'description', 'seo_description'];
+    protected $with = ['category'];
 
     public function getTitleAttribute()
     {

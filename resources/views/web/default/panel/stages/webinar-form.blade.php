@@ -19,41 +19,46 @@
                     <div class="col-12 col-lg-4">
                         <div class="form-group">
                             <label class="input-label">Branch</label>
-                            <select {{isset($user->location_id)?"disabled":""}} required name="branch" id="branch" class="form-control select2" style="width: 100%">
-                                <option value="">-- Select Branch --</option>
-                                @foreach($branches as $branch)
-                                    @if ($user->location_id==$branch->id)
-                                        <option selected value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                    @else
-                                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                    @endif
-                                @endforeach
+                            <select {{isset($id)?"":(isset($user->location_id)?"disabled":"")}} required name="branch" id="branch" class="form-control select2" style="width: 100%">
+                                @if (!isset($id))
+                                    <option value="">-- Select Branch --</option>
+                                    @foreach($branches as $branch)
+                                        @if ($user->location_id==$branch->id)
+                                            <option selected value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                        @else
+                                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                        @endif
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
                     </div>
                     <div class="col-12 col-lg-4">
                         <div class="form-group">
                             <label class="input-label">Division</label>
-                            <select {{isset($user->category_id)?"disabled":""}} required name="division" id="division" class="form-control select2" style="width: 100%">
-                                <option value="">-- Select Division --</option>
-                                @foreach($divisions as $division)
-                                    @if ($user->category_id==$division->id)
-                                        <option selected value="{{ $division->id }}">{{ $division->slug }}</option>
-                                    @else
-                                        <option value="{{ $division->id }}">{{ $division->slug }}</option>
-                                    @endif
-                                @endforeach
+                            <select {{isset($id)?"": (isset($user->category_id)?"disabled":"")}} required name="division" id="division" class="form-control select2" style="width: 100%">
+                                @if (!isset($id))
+                                    <option value="">-- Select Division --</option>
+                                    @foreach($divisions as $division)
+                                        @if ($user->category_id==$division->id)
+                                            <option selected value="{{ $division->id }}">{{ $division->title }}</option>
+                                        @else
+                                            <option value="{{ $division->id }}">{{ $division->title }}</option>
+                                        @endif
+                                    @endforeach
+                                @endif
                             </select>
-                            
                         </div>
                     </div>
                     <div class="col-12 col-lg-4">
                         <div class="form-group">
                             <label class="input-label">Stages</label>
                             <select name="level" id="level" class="form-control select2" style="width: 100%">
-                                @foreach($levels as $level)
-                                    <option value="{{ $level->id }}">{{ $level->stage }}</option>
-                                @endforeach
+                                @if (!isset($id))
+                                    @foreach($levels as $level)
+                                        <option value="{{ $level->id }}">{{ $level->stage }}</option>
+                                    @endforeach
+                                @endif
                             </select>
                             
                         </div>
@@ -144,6 +149,7 @@
     <script src="/assets/default/js/panel/report.js"></script>
 
     <script>
+        let id = "{{$id}}"
         let baseUrl = "<?= url('/')?>";
         let targets = {
             level_id:null,
@@ -154,6 +160,7 @@
         let webinars = [];
         let tempWebinars = [];
         $(document).ready(function(){
+            id == ""?"":getTargetById();
             getWebinar();
             tblTarget = $('#target-tabel').DataTable({
                 searching: false,
@@ -166,7 +173,7 @@
                         className:"text-left",
                     },
                     {
-                        data:"webinar.category.slug",
+                        data:"webinar.category.title",
                         bSortable: false,
                         className:"text-center",
                     },
@@ -303,15 +310,42 @@
             targets.level_id=$('#level').val();
             targets.category_id=$('#division').val();
             targets.location_id=$('#branch').val();
-            ajax(targets, `${baseUrl}/panel/stages/webinar/save`, "POST",
+
+            ajax(targets, `${baseUrl}/panel/stages/webinar/${id ==""?"save":"update"}`, "POST",
                 function(json) {
-                    unblockUI()
-                    toast('Data Saved Successfully','success')
+                    unblockUI();
+                    toast('Data Saved Successfully','success');
+                    setTimeout(() => {
+                        window.location.href=`${baseUrl}/panel/stages/webinar`
+                    }, 700);
                 },
                 function(json){
-                    unblockUI()
-                    toast(json.message??'something went wrong, Please try again later !','error')
-                    console.log(json);
+                    unblockUI();
+                    toast(json?.responseJSON?.message??'something went wrong, Please try again later !','error');
+                }
+            )
+        }
+
+        function getTargetById(){
+            blockUI();
+            ajax(null, `${baseUrl}/panel/stages/webinar/target/${id}`, "GET",
+                function(json) {
+                    $('#branch').append(`
+                        <option value="${json.location.id}">${json.location.name}</option>
+                    `).attr('disabled',true)
+                    $('#division').append(`
+                        <option value="${json.category.id}">${json.category.title}</option>
+                    `).attr('disabled',true)
+                    $('#level').append(`
+                        <option value="${json.level.id}">${json.level.stage}</option>
+                    `).attr('disabled',true)
+                    targets = json;
+                    reloadJsonDataTable(tblTarget, targets.details);
+                    unblockUI();
+                },
+                function(json){
+                    unblockUI();
+                    toast(json?.responseJSON?.message??'something went wrong, Please try again later !','error');
                 }
             )
         }

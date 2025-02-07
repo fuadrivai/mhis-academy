@@ -44,7 +44,8 @@ class UserReportController extends Controller
             getTemplate() . '.panel.report.division-report',
             [
                 'branches' => $locations,
-                'divisions' => $categories
+                'divisions' => $categories,
+                'user' => $user
             ]
         );
     }

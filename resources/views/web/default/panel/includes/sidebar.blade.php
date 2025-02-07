@@ -214,10 +214,10 @@
                 </a>
                 <div class="collapse {{ (request()->is('panel/stages') or request()->is('panel/stages*')) ? 'show' : '' }}" id="stagesCollapse">
                     <ul class="sidenav-item-collapse">
-                        <li class="mt-5 {{ (request()->is('panel/stages/teachers')) ? 'active' : '' }}">
+                        <li class="mt-5 {{ (request()->is('panel/stages/teacher*')) ? 'active' : '' }}">
                             <a href="/panel/stages/teacher">Teachers</a>
                         </li>
-                        <li class="mt-5 {{ (request()->is('panel/stages/webinar')) ? 'active' : '' }}">
+                        <li class="mt-5 {{ (request()->is('panel/stages/webinar*')) ? 'active' : '' }}">
                             <a href="/panel/stages/webinar">Courses</a>
                         </li>
                     </ul>

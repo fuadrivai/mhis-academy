@@ -36,16 +36,21 @@
                             </thead>
                             <tbody>
                                 @foreach ($targets as $target)
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$target['stage_name']}}</td>
-                                    <td>{{$target['category_name']}}</td>
-                                    <td>{{$target['location_name']}}</td>
-                                    <td>{{count($target['details'])}}</td>
-                                    <td>
-                                        <a href="" class="btn btn-sm btn-warning">
-                                            <i class="fa fa-edit"></i> Edit
-                                        </a>
-                                    </td>
+                                    <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td>{{$target['stage_name']}}</td>
+                                        <td>{{$target['category_name']}}</td>
+                                        <td>{{$target['location_name']}}</td>
+                                        <td>{{count($target['details'])}}</td>
+                                        <td>
+                                            <a href="/panel/stages/webinar/{{$target['id']}}" class="btn btn-sm btn-warning">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="" class="btn btn-sm btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>

@@ -17,6 +17,7 @@ class CreateTableStageDivisionDetails extends Migration
             $table->id();
             $table->foreignId('stage_divisions_id');
             $table->foreignId('webinar_id');
+            $table->string('title');
             $table->timestamps();
         });
     }

@@ -27,9 +27,11 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
         Route::get('/teacher', 'LevelController@teacher');
         Route::post('/teacher/post/{id}', 'LevelController@update');
         Route::post('/webinar/save', 'LevelController@store_target');
+        Route::post('/webinar/update', 'LevelController@update_target');
         Route::get('/webinar', 'LevelController@webinar');
         Route::get('/webinar/create', 'LevelController@webinar_create');
         Route::get('/webinar/{id}', 'LevelController@webinar_edit');
+        Route::get('/webinar/target/{id}', 'LevelController@get_target_webinar_by_id');
         // Route::get('/webinar/datatable', 'LevelController@webinar_datatables');
     });
 
