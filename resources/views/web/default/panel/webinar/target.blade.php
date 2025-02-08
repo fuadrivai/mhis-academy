@@ -1,17 +1,17 @@
-@if (!empty($target))
-    
-    @foreach ($target->details as $item)
+
+@if (!empty($webinars))
+    @foreach ($webinars as $item)
     <div class="row mt-30">
         <div class="col-12">
             <div class="webinar-card webinar-list d-flex">
                 <div class="image-box">
-                    <img src="{{ $item->webinar->getImage() }}" class="img-cover" alt="">
+                    <img src="{{ $item->getImage() }}" class="img-cover" alt="">
                 </div>
                 <div class="webinar-card-body w-100 d-flex flex-column">
                     <div class="d-flex align-items-center justify-content-between">
-                        <a href="{{ $item->webinar->getUrl() }}">
+                        <a href="{{ $item->getUrl() }}">
                             <h3 class="webinar-title font-weight-bold font-16 text-dark-blue">
-                                {{ $item->webinar->title }}
+                                {{ $item->title }}
                             </h3>
                         </a>
                         <div class="btn-group dropdown table-actions">
@@ -21,14 +21,14 @@
                         </div>
                     </div>
 
-                    @include(getTemplate() . '.includes.webinar.rate',['rate' => $item->webinar->getRate()])
+                    @include(getTemplate() . '.includes.webinar.rate',['rate' => $item->getRate()])
                     <div class="webinar-price-box mt-15">
-                        @if($item->webinar->price > 0)
-                            @if($item->webinar->bestTicket() < $item->webinar->price)
-                                <span class="real">{{ handlePrice($item->webinar->bestTicket(), true, true, false, null, true) }}</span>
-                                <span class="off ml-10">{{ handlePrice($item->webinar->price, true, true, false, null, true) }}</span>
+                        @if($item->price > 0)
+                            @if($item->bestTicket() < $item->price)
+                                <span class="real">{{ handlePrice($item->bestTicket(), true, true, false, null, true) }}</span>
+                                <span class="off ml-10">{{ handlePrice($item->price, true, true, false, null, true) }}</span>
                             @else
-                                <span class="real">{{ handlePrice($item->webinar->price, true, true, false, null, true) }}</span>
+                                <span class="real">{{ handlePrice($item->price, true, true, false, null, true) }}</span>
                             @endif
                         @else
                             <span class="real">{{ trans('public.free') }}</span>
@@ -37,14 +37,14 @@
                     <div class="d-flex align-items-center justify-content-between flex-wrap mt-auto">
                         <div class="d-flex align-items-start flex-column mt-20 mr-15">
                             <span class="stat-title">{{ trans('public.item_id') }}:</span>
-                            <span class="stat-value">{{ $item->webinar->id }}</span>
+                            <span class="stat-value">{{ $item->id }}</span>
                         </div>
                         <div class="d-flex align-items-start flex-column mt-20 mr-15">
                             <span class="stat-title">{{ trans('public.category') }}:</span>
-                            <span class="stat-value">{{ !empty($item->webinar->category_id) ?$item->webinar->category->title : '' }}</span>
+                            <span class="stat-value">{{ !empty($item->category_id) ?$item->category->title : '' }}</span>
                         </div>
-                        @if($item->webinar->type == 'webinar')
-                            @if($item->webinar->isProgressing() and !empty($nextSession))
+                        @if($item->type == 'webinar')
+                            @if($item->isProgressing() and !empty($nextSession))
                                 <div class="d-flex align-items-start flex-column mt-20 mr-15">
                                     <span class="stat-title">{{ trans('webinars.next_session_duration') }}:</span>
                                     <span class="stat-value">{{ convertMinutesToHourAndMinute($nextSession->duration) }} Hrs</span>
@@ -57,19 +57,19 @@
                             @else
                                 <div class="d-flex align-items-start flex-column mt-20 mr-15">
                                     <span class="stat-title">{{ trans('public.duration') }}:</span>
-                                    <span class="stat-value">{{ convertMinutesToHourAndMinute($item->webinar->duration) }} Hrs</span>
+                                    <span class="stat-value">{{ convertMinutesToHourAndMinute($item->duration) }} Hrs</span>
                                 </div>
 
                                 <div class="d-flex align-items-start flex-column mt-20 mr-15">
                                     <span class="stat-title">{{ trans('public.start_date') }}:</span>
-                                    <span class="stat-value">{{ dateTimeFormat($item->webinar->start_date,'j M Y') }}</span>
+                                    <span class="stat-value">{{ dateTimeFormat($item->start_date,'j M Y') }}</span>
                                 </div>
                             @endif
                         @endif
 
                         <div class="d-flex align-items-start flex-column mt-20 mr-15">
                             <span class="stat-title">{{ trans('public.instructor') }}:</span>
-                            <span class="stat-value">{{ $item->webinar->teacher->full_name }}</span>
+                            <span class="stat-value">{{ $item->teacher->full_name }}</span>
                         </div>
                     </div>
                 </div>
@@ -77,4 +77,10 @@
         </div>
     </div>
     @endforeach
+@else
+    @include(getTemplate() . '.includes.no-result',[
+        'file_name' => 'student.png',
+        'title' => trans('panel.no_result_purchases') ,
+        'hint' => "Please contact your principal to set your targets"
+    ])
 @endif

@@ -1,3 +1,12 @@
+<style>
+    .disabled-link {
+        pointer-events: none;
+        background-color: grey;
+        color: white;
+        text-decoration: none;
+        cursor: default;
+    }
+  </style>
 @php
     $checkSequenceContent = $file->checkSequenceContent();
     $sequenceContentHasError = (!empty($checkSequenceContent) and (!empty($checkSequenceContent['all_passed_items_error']) or !empty($checkSequenceContent['access_after_day_error'])));
@@ -74,7 +83,7 @@
                         @endif
                     @else
                         @if($file->downloadable)
-                            <a href="{{ $course->getUrl() }}/file/{{ $file->id }}/download" class="course-content-btns btn btn-sm btn-primary">
+                            <a href="{{ $course->getUrl() }}/file/{{ $file->id }}/download" onclick="{{$hasBought?"":"return false"}}" class="course-content-btns btn btn-sm {{$hasBought?"btn-primary":"disabled-link"}}">
                                 {{ trans('home.download') }}
                             </a>
                         @else
@@ -87,15 +96,15 @@
                                     {{ trans('public.play') }}
                                 </a>
                             @elseif(in_array($file->storage, ['iframe', 'google_drive', 'dropbox']))
-                                <a href="/course/{{ $course->slug }}/file/{{ $file->id }}/play" target="_blank" class="course-content-btns btn btn-sm btn-primary">
+                                <a href="/course/{{ $course->slug }}/file/{{ $file->id }}/play" onclick="{{$hasBought?"":"return false"}}" target="_blank" class="course-content-btns btn btn-sm {{$hasBought?"btn-primary":"disabled-link"}}">
                                     {{ trans('public.play') }}
                                 </a>
                             @elseif($file->isVideo())
-                                <button type="button" data-id="{{ $file->id }}" data-title="{{ $file->title }}" class="js-play-video course-content-btns btn btn-sm btn-primary">
+                                <button {{$hasBought?"":"disabled"}} type="button" data-id="{{ $file->id }}" data-title="{{ $file->title }}" class="js-play-video course-content-btns btn btn-sm {{$hasBought?"btn-primary":"disabled-link"}}">
                                     {{ trans('public.play') }}
                                 </button>
                             @else
-                                <a href="{{ $file->file }}" target="_blank" class="course-content-btns btn btn-sm btn-primary">
+                                <a href="{{ $file->file }}" target="_blank" onclick="{{$hasBought?"":"return false"}}" class="course-content-btns btn btn-sm {{$hasBought?"btn-primary":"disabled-link"}}">
                                     {{ trans('public.play') }}
                                 </a>
                             @endif

@@ -16,6 +16,7 @@ class CreateTableDivisionStages extends Migration
         Schema::create('stage_divisions', function (Blueprint $table) {
             $table->id();
             $table->string('stage_name');
+            $table->integer('level');
             $table->string('location_name');
             $table->string('category_name');
             $table->foreignId('level_id');

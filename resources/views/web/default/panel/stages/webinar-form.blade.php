@@ -149,7 +149,7 @@
     <script src="/assets/default/js/panel/report.js"></script>
 
     <script>
-        let id = "{{$id}}"
+        let id = "{{isset($id)?$id:''}}"
         let baseUrl = "<?= url('/')?>";
         let targets = {
             level_id:null,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Exports\WebinarStudents;
 use App\Http\Controllers\Controller;
+use App\Level;
 use App\Mixins\RegistrationPackage\UserPackage;
 use App\Models\BundleWebinar;
 use App\Models\Category;
@@ -27,6 +28,7 @@ use App\Models\Webinar;
 use App\Models\WebinarPartnerTeacher;
 use App\Models\WebinarFilterOption;
 use App\StageDivision;
+use App\StageDivisionDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -1078,13 +1080,22 @@ class WebinarController extends Controller
 
     public function target($user, $tab)
     {
-        $targets = StageDivision::where('category_id', $user->category_id)
+        $level = Level::where('id', $user->level_id)->first();
+        $target_id = StageDivision::where('category_id', $user->category_id)
             ->where('location_id', $user->location_id)
-            ->where('level_id', $user->level_id)
-            ->first();
+            ->where('level', '<=', $level->level)
+            ->pluck('id')->toArray();
+        $detail_id = StageDivisionDetail::whereIn('stage_divisions_id', $target_id)->pluck('webinar_id')->toArray();
+        $webinars = Webinar::whereIn('id', $detail_id)->get();
+        $webinarNotSale = $webinars->filter(function ($item) use ($user) {
+            $sold = Sale::where('webinar_id', $item->id)->where('buyer_id', $user->id)->first();
+            if (is_null($sold)) {
+                return $item;
+            }
+        });
         $data = [
             'pageTitle' => trans('webinars.webinars_purchases_page_title'),
-            'target' => $targets,
+            'webinars' => $webinarNotSale,
             'query' => [
                 'tab' => $tab
             ]

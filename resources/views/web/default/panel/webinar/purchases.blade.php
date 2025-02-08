@@ -5,21 +5,19 @@
 @endpush
 
 @section('content')
-    <!--<section style="padding-bottom: 30px">-->
-    <!--    <div class="d-flex align-items-start align-items-md-center justify-content-between flex-column flex-md-row">-->
-    <!--        <h1 class="section-title">{{ trans('panel.dashboard') }}</h1>-->
-    <!--    </div>-->
-
-    <!--    <h2 class="font-30 text-primary line-height-1">-->
-    <!--        <span class="d-block">{{ trans('panel.hi') }} {{ $authUser->full_name }},</span>-->
-    <!--    </h2>-->
-    <!--</section>-->
     <section>
         <div class="webinar-progress d-block d-lg-flex align-items-center p-15 panel-shadow bg-white rounded-sm mb-20">
+
             <div class="progress-item d-flex align-items-center">
-                <a href="/panel?tab=target" class="progress-icon p-10 d-flex align-items-center justify-content-center rounded-circle {{$query['tab']=='target'?'active':''}}" data-toggle="tooltip" data-placement="top">
-                    <img src="/assets/default/img/icons/basic-info.svg" class="img-cover" alt="">
-                </a>
+                @if ($query['tab']!=null)
+                    <a href="/panel?tab=target" class="progress-icon p-10 d-flex align-items-center justify-content-center rounded-circle {{$query['tab']=='target'?'active':''}}" data-toggle="tooltip" data-placement="top">
+                        <img src="/assets/default/img/icons/basic-info.svg" class="img-cover" alt="">
+                    </a>
+                @else
+                    <a href="/panel?tab=target" class="progress-icon p-10 d-flex align-items-center justify-content-center rounded-circle active" data-toggle="tooltip" data-placement="top">
+                        <img src="/assets/default/img/icons/basic-info.svg" class="img-cover" alt="">
+                    </a>
+                @endif
                 <div class="ml-10">
                     <h4 class="font-16 text-secondary font-weight-bold">Targets</h4>
                 </div>

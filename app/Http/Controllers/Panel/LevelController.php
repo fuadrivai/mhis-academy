@@ -147,6 +147,7 @@ class LevelController extends Controller
                 $sd->category_id = $request['category_id'];
                 $sd->location_id = $request['location_id'];
                 $sd->created_by_id = $user->id;
+                $sd->level = Level::find($request['level_id'])->level;
                 $sd->stage_name = Level::find($request['level_id'])->stage;
                 $sd->category_name = Category::find($request['category_id'])->slug;
                 $sd->location_name = Location::find($request['location_id'])->name;
