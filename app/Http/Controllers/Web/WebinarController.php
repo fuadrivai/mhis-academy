@@ -19,6 +19,8 @@ use App\Models\CourseLearning;
 use App\Models\WebinarChapter;
 use App\Models\WebinarReport;
 use App\Models\Webinar;
+use App\StageDivision;
+use App\StageDivisionDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -631,6 +633,28 @@ class WebinarController extends Controller
                 ->where('status', 'active')
                 ->first();
 
+            $target_id = StageDivisionDetail::where('webinar_id', $course->id)->pluck('stage_divisions_id')->toArray();
+            if ($user->isUser()) {
+                $target = StageDivision::whereIn('id', $target_id)
+                    ->where('category_id', $user->category_id)
+                    ->where('level_id', "<=", $user->level_id)
+                    ->first();
+            }
+
+            // if ($user->isPrincipal()) {
+            //     $target = StageDivision::whereIn('id', $target_id)
+            //         ->where('category_id', $user->category_id)
+            //         ->first();
+            // }
+
+            if (is_null($target)) {
+                $toastData = [
+                    'title' => "Something Wrong !",
+                    'msg' => "Division or Stage do not Match",
+                    'status' => 'error'
+                ];
+                return back()->with(['toast' => $toastData]);
+            }
             if (!empty($course)) {
                 $checkCourseForSale = checkCourseForSale($course, $user);
 
