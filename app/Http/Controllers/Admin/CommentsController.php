@@ -25,7 +25,7 @@ class CommentsController extends Controller
 
     public function __construct(Request $request)
     {
-        $page = Route::current()->parameter('page');
+        $page = $request->route('page');
         $this->page = $page;
 
         if ($page == 'webinars') {

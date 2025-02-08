@@ -6,6 +6,7 @@ use App\Bitwise\UserLevelOfTraining;
 use App\Models\Accounting;
 use App\Models\Badge;
 use App\Models\BundleWebinar;
+use App\Models\Category;
 use App\Models\ForumTopic;
 use App\Models\ForumTopicLike;
 use App\Models\ForumTopicPost;
@@ -49,7 +50,7 @@ class User extends Authenticatable
         'facebook_id',
         'role_id'
     ];
-    protected $with = ['location', 'category'];
+    protected $with = ['location', 'category', 'level'];
 
     static $statuses = [
         'active',
@@ -128,12 +129,15 @@ class User extends Authenticatable
 
     public function category()
     {
-
-        return $this->belongsTo('App\Models\Category', 'category_id', 'id');
+        return $this->belongsTo(Category::class);
     }
     public function location()
     {
-        return $this->belongsTo('App\Location', 'location_id', 'id');
+        return $this->belongsTo(Location::class);
+    }
+    public function level()
+    {
+        return $this->belongsTo(Level::class);
     }
 
     public function getAvatar($size = 40)

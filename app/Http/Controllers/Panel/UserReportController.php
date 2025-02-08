@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Location;
 use App\Models\Category;
 use App\Models\Sale;
-use App\Models\Webinar;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -45,7 +44,8 @@ class UserReportController extends Controller
             getTemplate() . '.panel.report.division-report',
             [
                 'branches' => $locations,
-                'divisions' => $categories
+                'divisions' => $categories,
+                'user' => $user
             ]
         );
     }
@@ -54,6 +54,7 @@ class UserReportController extends Controller
         $students = $this->generateUserCourse($request);
         return response()->json($students);
     }
+
     public function getPdfByDivision(Request $request)
     {
         $students = $this->generateUserCourse($request);

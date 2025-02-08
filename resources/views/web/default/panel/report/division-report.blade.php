@@ -19,10 +19,14 @@
                     <div class="col-12 col-lg-3">
                         <div class="form-group">
                             <label class="input-label">Branch</label>
-                            <select name="branch" id="branch" class="form-control select2" style="width: 100%">
-                                <option value="all">All</option>
+                            <select {{isset($user->location_id)?"disabled":""}} name="branch" id="branch" class="form-control select2" style="width: 100%">
+                                <option value="">-- Select Branch --</option>
                                 @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    @if ($user->location_id==$branch->id)
+                                        <option selected value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    @else
+                                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -30,12 +34,16 @@
                     <div class="col-12 col-lg-3">
                         <div class="form-group">
                             <label class="input-label">Division</label>
-                            <select name="division" id="division" class="form-control select2" style="width: 100%">
+                            <select {{isset($user->category_id)?"disabled":""}} required name="division" id="division" class="form-control select2" style="width: 100%">
+                                <option value="">-- Select Division --</option>
                                 @foreach($divisions as $division)
-                                    <option value="{{ $division->id }}">{{ $division->slug }}</option>
+                                    @if ($user->category_id==$division->id)
+                                        <option selected value="{{ $division->id }}">{{ $division->slug }}</option>
+                                    @else
+                                        <option value="{{ $division->id }}">{{ $division->slug }}</option>
+                                    @endif
                                 @endforeach
                             </select>
-                            
                         </div>
                     </div>
                     <div class="col-12 col-lg-3">
@@ -262,24 +270,10 @@
             let from = $('#from').val();
             let to = $('#to').val();
             if (from == "" || to == "") {
-                $.toast({
-                    heading: 'Information',
-                    text: 'Start date and End date could not be empty',
-                    icon: 'warning',
-                    loader: true,        // Change it to false to disable loader
-                    loaderBg: 'text-danger'  // To change the background
-                })
+                toast('Start date and End date could not be empty','error')
                 return false;
             }
-            $.blockUI({ css: { 
-                border: 'none', 
-                padding: '15px', 
-                backgroundColor: '#000', 
-                '-webkit-border-radius': '10px', 
-                '-moz-border-radius': '10px', 
-                opacity: .5, 
-                color: '#fff' 
-            } }); 
+            blockUI()
             let data = {
                 from : from,
                 to : to,
@@ -290,24 +284,20 @@
             ajax(data, `${baseUrl}/panel/report`, "GET",
                 function(json) {
                     reloadJsonDataTable(table, json);
-                    $.unblockUI()
-            },function(json){
-                $.unblockUI()
-                console.log(json);
-            })
+                    unblockUI()
+                },
+                function(json){
+                    unblockUI()
+                    console.log(json);
+                }
+            )
         }
 
         function getReportPdf(){
             let from = $('#from').val();
             let to = $('#to').val();
             if (from == "" || to == "") {
-                $.toast({
-                    heading: 'Information',
-                    text: 'Start date and End date could not be empty',
-                    icon: 'warning',
-                    loader: true,        // Change it to false to disable loader
-                    loaderBg: 'text-danger'  // To change the background
-                })
+                toast('Start date and End date could not be empty','error')
                 return false;
             }
             let data = {

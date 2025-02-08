@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Panel\LevelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -8,10 +9,11 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+Route::get('panel/stages/webinar/datatable', [LevelController::class, 'webinar_datatables']);
 Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['check_mobile_app', 'impersonate', 'panel', 'share', 'check_maintenance']], function () {
     Route::get('/', 'WebinarController@purchases');
     // Route::get('/', 'DashboardController@dashboard');
-    
+
     Route::group(['prefix' => 'report'], function () {
         Route::get('/', 'UserReportController@getByDivision');
         Route::get('/pdf', 'UserReportController@getPdfByDivision');
@@ -21,9 +23,21 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
         Route::get('/user/periode/{id}', 'UserReportController@byPeriod');
     });
 
+    Route::group(['prefix' => 'stages'], function () {
+        Route::get('/teacher', 'LevelController@teacher');
+        Route::post('/teacher/post/{id}', 'LevelController@update');
+        Route::post('/webinar/save', 'LevelController@store_target');
+        Route::post('/webinar/update', 'LevelController@update_target');
+        Route::get('/webinar', 'LevelController@webinar');
+        Route::get('/webinar/create', 'LevelController@webinar_create');
+        Route::get('/webinar/{id}', 'LevelController@webinar_edit');
+        Route::get('/webinar/target/{id}', 'LevelController@get_target_webinar_by_id');
+        // Route::get('/webinar/datatable', 'LevelController@webinar_datatables');
+    });
+
     Route::group(['prefix' => 'users'], function () {
         Route::post('/search', 'UserController@search');
-        Route::post('/contact-info', 'UserController@contactInfo');
+        // Route::post('/contact-info', 'UserController@contactInfo');
         Route::post('/offlineToggle', 'UserController@offlineToggle');
         Route::get('/{id}/getInfo', 'UserController@getUserInfo');
     });
@@ -123,8 +137,6 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
 
         Route::get('/{quizResultId}/edit-result', 'QuizController@editResult');
         Route::post('/{quizResultId}/update-result', 'QuizController@updateResult');
-
-
     });
 
     Route::group(['prefix' => 'quizzes-questions'], function () {
@@ -469,5 +481,3 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
         });
     });
 });
-
-

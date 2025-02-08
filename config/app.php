@@ -186,6 +186,7 @@ return [
         App\Providers\MinioStorageServiceProvider::class,
         Gathuku\Mpesa\MpesaServiceProvider::class,
         Ssheduardo\Redsys\RedsysServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
     ],
 
     /*
@@ -244,6 +245,7 @@ return [
         'Rave' => KingFlamez\Rave\Facades\Rave::class,
         'Mpesa' => Gathuku\Mpesa\Facades\Mpesa::class,
         'Redsys'    => Ssheduardo\Redsys\Facades\Redsys::class,
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ],
 
 ];

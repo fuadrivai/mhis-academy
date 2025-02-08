@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\sendContactReply;
-use App\Mail\SendNotifications;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 
@@ -59,7 +58,7 @@ class ContactController extends Controller
             \Mail::to($contact->email)->send(new sendContactReply($contact));
         }
 
-        return redirect(getAdminPanelUrl().'/contacts');
+        return redirect(getAdminPanelUrl() . '/contacts');
     }
 
     public function delete($id)
@@ -70,6 +69,6 @@ class ContactController extends Controller
 
         $contact->delete();
 
-        return redirect(getAdminPanelUrl().'/contacts');
+        return redirect(getAdminPanelUrl() . '/contacts');
     }
 }

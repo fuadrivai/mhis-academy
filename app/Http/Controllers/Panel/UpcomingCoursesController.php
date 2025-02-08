@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Validator;
 
 class UpcomingCoursesController extends Controller
 {
-    public function __construct()
-    {
-        if (empty(getFeaturesSettings('upcoming_courses_status'))) {
-            abort(404);
-        }
-    }
+    // public function __construct()
+    // {
+    //     if (empty(getFeaturesSettings('upcoming_courses_status'))) {
+    //         abort(404);
+    //     }
+    // }
 
     public function index(Request $request)
     {
@@ -326,7 +326,8 @@ class UpcomingCoursesController extends Controller
             ]);
         }
 
-        unset($data['_token'],
+        unset(
+            $data['_token'],
             $data['current_step'],
             $data['draft'],
             $data['get_step'],

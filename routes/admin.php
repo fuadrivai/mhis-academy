@@ -436,7 +436,6 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => 'web'
         Route::group(['prefix' => 'consultants'], function () {
             Route::get('/', 'ConsultantsController@index');
             Route::get('/excel', 'ConsultantsController@exportExcel');
-
         });
 
         Route::group(['prefix' => 'appointments'], function () {
@@ -716,12 +715,12 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => 'web'
             Route::get('/{id}/delete', 'TestimonialsController@delete');
         });
 
-        Route::group(['prefix' => 'contacts'], function () {
-            Route::get('/', 'ContactController@index');
-            Route::get('/{id}/reply', 'ContactController@reply');
-            Route::post('/{id}/reply', 'ContactController@storeReply');
-            Route::get('/{id}/delete', 'ContactController@delete');
-        });
+        // Route::group(['prefix' => 'contacts'], function () {
+        //     Route::get('/', 'ContactController@index');
+        //     Route::get('/{id}/reply', 'ContactController@reply');
+        //     Route::post('/{id}/reply', 'ContactController@storeReply');
+        //     Route::get('/{id}/delete', 'ContactController@delete');
+        // });
 
         Route::group(['prefix' => 'pages'], function () {
             Route::get('/', 'PagesController@index');
@@ -895,16 +894,16 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => 'web'
         });
 
         Route::group(['prefix' => 'forums'], function () {
-            Route::get('/', 'ForumController@index');
-            Route::get('/create', 'ForumController@create');
-            Route::post('/store', 'ForumController@store');
-            Route::get('/{id}/edit', 'ForumController@edit');
-            Route::post('/{id}/update', 'ForumController@update');
-            Route::get('/{id}/delete', 'ForumController@destroy');
-            Route::post('/search', 'ForumController@search');
+            // Route::get('/', 'ForumController@index');
+            // Route::get('/create', 'ForumController@create');
+            // Route::post('/store', 'ForumController@store');
+            // Route::get('/{id}/edit', 'ForumController@edit');
+            // Route::post('/{id}/update', 'ForumController@update');
+            // Route::get('/{id}/delete', 'ForumController@destroy');
+            // Route::post('/search', 'ForumController@search');
 
             Route::group(['prefix' => 'topics'], function () {
-                Route::post('/search', 'ForumController@searchTopics');
+                // Route::post('/search', 'ForumController@searchTopics');
                 Route::get('/create', 'ForumTopicsController@create');
                 Route::post('/store', 'ForumTopicsController@store');
             });

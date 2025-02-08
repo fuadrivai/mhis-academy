@@ -19,8 +19,6 @@ Route::group([], function () {
         Route::post('/{id}/report', ['uses' => 'WebinarController@report', 'middleware' => 'api.auth']);
 
         Route::post('/{webinar_id}/toggle', ['uses' => 'WebinarController@learningStatus', 'middleware' => 'api.auth']);
-
-
     });
 
     Route::get('certificate_validation', ['uses' => 'CertificatesController@checkValidate', 'middleware' => 'api.request.type']);
@@ -36,7 +34,6 @@ Route::group([], function () {
         Route::get('instructors', ['uses' => 'UserController@instructors']);
         Route::get('organizations', ['uses' => 'UserController@organizations']);
         Route::get('consultations', ['uses' => 'UserController@consultations']);
-
     });
 
     /******  Meetings ******/
@@ -54,7 +51,6 @@ Route::group([], function () {
         Route::get('/', ['uses' => 'BlogController@index']);
         Route::get('/categories', ['uses' => 'BlogCategoryController@index']);
         Route::get('/{id}', ['uses' => 'BlogController@show']);
-
     });
 
     Route::get('advertising-banner', ['uses' => 'AdvertisingBannerController@list']);
@@ -65,15 +61,13 @@ Route::group([], function () {
     Route::get('organizations', ['uses' => 'UserController@organizations']);
 
     Route::post('newsletter', ['uses' => 'UserController@makeNewsletter', 'middleware' => 'format']);
-    Route::post('contact', ['uses' => 'ContactController@store', 'middleware' => 'format']);
+    // Route::post('contact', ['uses' => 'ContactController@store', 'middleware' => 'format']);
 
     Route::group(['prefix' => 'regions'], function () {
         Route::get('/countries/', ['uses' => 'RegionsController@countries']);
         Route::get('/provinces/{id?}', ['uses' => 'RegionsController@provinces']);
         Route::get('/cities/{id?}', ['uses' => 'RegionsController@cities']);
         Route::get('/districts/{id?}', ['uses' => 'RegionsController@districts']);
-
-
     });
     Route::get('timezones', ['uses' => 'TimeZonesController@index']);
 
@@ -89,17 +83,6 @@ Route::group([], function () {
     Route::group(['prefix' => 'products'], function () {
         Route::get('/', ['uses' => 'ProductController@index']);
         Route::get('/{id}', ['uses' => 'ProductController@show']);
-
     });
     Route::get('/product_categories', ['uses' => 'ProductCategoryController@index']);
-
 });
-
-
-
-
-
-
-
-
-
