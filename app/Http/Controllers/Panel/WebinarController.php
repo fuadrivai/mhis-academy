@@ -1080,22 +1080,24 @@ class WebinarController extends Controller
 
     public function target($user, $tab)
     {
-        $level = Level::where('id', $user->level_id)->first();
-        $target_id = StageDivision::where('category_id', $user->category_id)
-            ->where('location_id', $user->location_id)
-            ->where('level', '<=', $level->level)
-            ->pluck('id')->toArray();
-        $detail_id = StageDivisionDetail::whereIn('stage_divisions_id', $target_id)->pluck('webinar_id')->toArray();
-        $webinars = Webinar::whereIn('id', $detail_id)->get();
-        $webinarNotSale = $webinars->filter(function ($item) use ($user) {
-            $sold = Sale::where('webinar_id', $item->id)->where('buyer_id', $user->id)->first();
-            if (is_null($sold)) {
-                return $item;
-            }
-        });
+        if ($user->level_id != null) {
+            $level = Level::where('id', $user->level_id)->first();
+            $target_id = StageDivision::where('category_id', $user->category_id)
+                ->where('location_id', $user->location_id)
+                ->where('level', '<=', $level->level)
+                ->pluck('id')->toArray();
+            $detail_id = StageDivisionDetail::whereIn('stage_divisions_id', $target_id)->pluck('webinar_id')->toArray();
+            $webinars = Webinar::whereIn('id', $detail_id)->get();
+            $webinarNotSale = $webinars->filter(function ($item) use ($user) {
+                $sold = Sale::where('webinar_id', $item->id)->where('buyer_id', $user->id)->first();
+                if (is_null($sold)) {
+                    return $item;
+                }
+            });
+        }
         $data = [
             'pageTitle' => trans('webinars.webinars_purchases_page_title'),
-            'webinars' => $webinarNotSale,
+            'webinars' => $webinarNotSale ?? [],
             'query' => [
                 'tab' => $tab
             ]
