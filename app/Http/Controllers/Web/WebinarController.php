@@ -634,17 +634,19 @@ class WebinarController extends Controller
                 ->first();
 
             if ($user->isUser()) {
+                if ($user->level_id == null) {
+                    $toastData = [
+                        'title' => "Something Wrong !",
+                        'msg' => "Division or Stage do not Match",
+                        'status' => 'error'
+                    ];
+                    return back()->with(['toast' => $toastData]);
+                }
                 $target_id = StageDivisionDetail::where('webinar_id', $course->id)->pluck('stage_divisions_id')->toArray();
                 $target = StageDivision::whereIn('id', $target_id)
                     ->where('category_id', $user->category_id)
                     ->where('level_id', "<=", $user->level_id)
                     ->first();
-                // if ($user->isPrincipal()) {
-                //     $target = StageDivision::whereIn('id', $target_id)
-                //         ->where('category_id', $user->category_id)
-                //         ->first();
-                // }
-
                 if (is_null($target)) {
                     $toastData = [
                         'title' => "Something Wrong !",
