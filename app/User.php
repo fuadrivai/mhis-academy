@@ -552,9 +552,35 @@ class User extends Authenticatable
     {
         return Sale::where('seller_id', $this->id)
             ->whereNotNull('webinar_id')
-            ->where('type', 'webinar')
             ->whereNull('refund_at')
             ->count();
+    }
+    public function salesBuy()
+    {
+        return Sale::where('buyer_id', $this->id)
+            ->whereNotNull('webinar_id')
+            ->where('type', 'webinar')
+            ->whereNull('refund_at')
+            ->where(function ($query) {
+                $query->where(function ($query) {
+                    $query->whereNotNull('sales.webinar_id')
+                        ->where('sales.type', 'webinar')
+                        ->whereHas('webinar', function ($query) {
+                            $query->where('status', 'active');
+                        });
+                });
+                $query->orWhere(function ($query) {
+                    $query->whereNotNull('sales.bundle_id')
+                        ->where('sales.type', 'bundle')
+                        ->whereHas('bundle', function ($query) {
+                            $query->where('status', 'active');
+                        });
+                });
+                $query->orWhere(function ($query) {
+                    $query->whereNotNull('gift_id');
+                    $query->whereHas('gift');
+                });
+            })->count();
     }
 
     public function productsSalesCount()

@@ -42,7 +42,7 @@
     <div class="row pb-lg-20 mt-15 mt-lg-30">
         <div class="col-12 text-center">
             <div class="d-flex flex-column ">
-                <strong class="text-center">{{ $authUser->webinars()->count() }}</strong>
+                <strong class="text-center">{{ $authUser->salesBuy()??0 }}</strong>
                 <span class="font-12">{{ trans('panel.classes') }}</span>
             </div>
         </div>
